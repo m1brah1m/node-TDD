@@ -58,4 +58,18 @@ describe("Testing the note taking api", () => {
   //         );
   //       });
   //   });
+  test("GET /notes/:id ➡ get a specific note", () => {
+    return request(app)
+      .get("/notes/:id")
+      .expect(200)
+      .expect("Content-type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            note_title: expect.any(String),
+            note_body: expect.any(String),
+          })
+        );
+      });
+  });
 });
