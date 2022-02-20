@@ -29,4 +29,33 @@ describe("Testing the note taking api", () => {
         );
       });
   });
+
+  test("GET /notes ➡ get an array of notes", () => {
+    return request(app)
+      .get("/notes")
+      .expect(200)
+      .expect("Content-type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              note_title: expect.any(String),
+              note_body: expect.any(String),
+            }),
+          ])
+        );
+      });
+  });
+
+  //   test("GET /notes ➡ no notes found", () => {
+  //     return request(app)
+  //       .get("/notes")
+  //       .expect(404)
+  //       .expect("Content-type", /json/)
+  //       .then((response) => {
+  //         expect(response.body).toEqual(
+  //           expect.objectContaining({ message: "Not Found" })
+  //         );
+  //       });
+  //   });
 });
