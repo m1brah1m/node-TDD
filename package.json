@@ -2,7 +2,7 @@
   "name": "note-taking-api",
   "version": "1.0.0",
   "description": "api for a note-taking app",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "dev": "nodemon server.js",
     "test": "jest --watchAll --verbose"
