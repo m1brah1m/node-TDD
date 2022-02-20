@@ -27,6 +27,11 @@ app.post("/notes", async (req, res, next) => {
 // List an array of notes
 app.get("/notes", async (req, res, next) => {
   try {
+    const notes = await pool.query("SELECT * FROM notes");
+    if (!notes.rows[0]) {
+      return res.status(404).json({ message: "Not Found" });
+    }
+    res.status(200).json(notes.rows);
   } catch (error) {
     console.log(error);
   }
