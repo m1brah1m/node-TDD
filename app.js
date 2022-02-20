@@ -40,7 +40,16 @@ app.get("/notes", async (req, res, next) => {
 // Get a note by id
 app.get("/notes/:id", async (req, res, next) => {
   try {
-  } catch (error) {}
+    const note = await pool.query("SELECT * FROM notes WHERE id=$1", [
+      req.params.id,
+    ]);
+    if (!note.rows[0]) {
+      return res.status(404).json({ message: "Not Found" });
+    }
+    res.status(200).json(note.rows[0]);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // Update a note by id
