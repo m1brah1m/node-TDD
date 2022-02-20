@@ -60,7 +60,7 @@ describe("Testing the note taking api", () => {
   //   });
   test("GET /notes/:id ➡ get a specific note", () => {
     return request(app)
-      .get("/notes/:id")
+      .get("/notes/1")
       .expect(200)
       .expect("Content-type", /json/)
       .then((response) => {
@@ -68,6 +68,19 @@ describe("Testing the note taking api", () => {
           expect.objectContaining({
             note_title: expect.any(String),
             note_body: expect.any(String),
+          })
+        );
+      });
+  });
+  test("GET /notes/:id ➡ get a specific note", () => {
+    return request(app)
+      .get("/notes/100")
+      .expect(404)
+      .expect("Content-type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            message: "Not Found",
           })
         );
       });
