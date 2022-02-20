@@ -72,7 +72,7 @@ describe("Testing the note taking api", () => {
         );
       });
   });
-  test("GET /notes/:id ➡ get a specific note", () => {
+  test("GET /notes/:id ➡ note not found", () => {
     return request(app)
       .get("/notes/100")
       .expect(404)
