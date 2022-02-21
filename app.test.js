@@ -1,7 +1,8 @@
 const request = require("supertest");
+const { response } = require("./app");
 const app = require("./app");
 
-describe("Testing the note taking api", () => {
+describe("Test POST", () => {
   test("POST /notes ➡ create a note", () => {
     return request(app)
       .post("/notes")
@@ -29,7 +30,9 @@ describe("Testing the note taking api", () => {
         );
       });
   });
+});
 
+describe("Test GET", () => {
   test("GET /notes ➡ get an array of notes", () => {
     return request(app)
       .get("/notes")
@@ -60,7 +63,7 @@ describe("Testing the note taking api", () => {
   //   });
   test("GET /notes/:id ➡ get a specific note", () => {
     return request(app)
-      .get("/notes/1")
+      .get("/notes/10")
       .expect(200)
       .expect("Content-type", /json/)
       .then((response) => {
@@ -85,17 +88,60 @@ describe("Testing the note taking api", () => {
         );
       });
   });
+});
 
-  test("PUT /notes/:id ➡ update a specific note", () => {
+describe("TEST PUT", () => {
+  test("PUT /notes/:id ➡ update a specific note [ALL]", () => {
     return request(app)
       .put("/notes/1")
-      .send({ note_title: "Note 1", note_body: "Body" })
+      .send({ note_title: "Note 10000", note_body: "Note 10000" })
       .expect(200)
       .expect("Content-type", /json/)
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
             message: "Note Updated",
+          })
+        );
+      });
+  });
+  test("PUT /notes/:id ➡ update a specific note [note title only]", () => {
+    return request(app)
+      .put("/notes/2")
+      .send({ note_title: "Note 10000" })
+      .expect(200)
+      .expect("Content-type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            message: "Note Updated",
+          })
+        );
+      });
+  });
+  test("PUT /notes/:id ➡ update a specific note [note body only]", () => {
+    return request(app)
+      .put("/notes/3")
+      .send({ note_body: "Note 10000" })
+      .expect(200)
+      .expect("Content-type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            message: "Note Updated",
+          })
+        );
+      });
+  });
+  test("PUT /notes/:id ➡ update a specific note", () => {
+    return request(app)
+      .put("/notes/4")
+      .expect(200)
+      .expect("Content-type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            message: "Nothing Changed",
           })
         );
       });
@@ -114,7 +160,31 @@ describe("Testing the note taking api", () => {
         );
       });
   });
+});
 
-  //   test("DELETE /notes/:id ➡ delete a specific note");
-  //   test("DELETE /notes/:id ➡ note not found");
+describe("TEST DELETE", () => {
+  test("DELETE /notes/:id ➡ delete a specific note", () => {
+    return request(app)
+      .delete("/notes/6")
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            message: "Note Deleted",
+          })
+        );
+      });
+  });
+  test("DELETE /notes/:id ➡ note not found", () => {
+    return request(app)
+      .delete("/notes/5")
+      .expect(404)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            message: "Not Found",
+          })
+        );
+      });
+  });
 });
