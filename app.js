@@ -61,11 +61,27 @@ app.put("/notes/:id", async (req, res, next) => {
     if (!note.rows[0]) {
       return res.status(404).json({ message: "Not Found" });
     }
-
-    await pool.query(
-      "UPDATE notes SET note_body=$1,note_title=$2 WHERE id=$3;",
-      [req.body.note_body, req.body.note_title, req.params.id]
-    );
+    if (!req.body.note_title && !req.body.note_body) {
+      res.status(200).json({ message: "Nothing Changed" });
+    }
+    if (!req.body.note_body) {
+      await pool.query("UPDATE notes SET note_title=$1 WHERE id=$2;", [
+        req.body.note_title,
+        req.params.id,
+      ]);
+    }
+    if (!req.body.note_title) {
+      await pool.query("UPDATE notes SET note_body=$1 WHERE id=$2;", [
+        req.body.note_body,
+        req.params.id,
+      ]);
+    }
+    if (req.body.note_title && req.body.note_body) {
+      await pool.query(
+        "UPDATE notes SET note_body=$1,note_title=$2 WHERE id=$3;",
+        [req.body.note_body, req.body.note_title, req.params.id]
+      );
+    }
 
     res.status(200).json({ message: "Note Updated" });
   } catch (error) {
@@ -76,7 +92,17 @@ app.put("/notes/:id", async (req, res, next) => {
 // Delete a note by id
 app.delete("/notes/:id", async (req, res, next) => {
   try {
-  } catch (error) {}
+    const note = await pool.query("SELECT * FROM notes WHERE id=$1", [
+      req.params.id,
+    ]);
+    if (!note.rows[0]) {
+      return res.status(404).json({ message: "Not Found" });
+    }
+    await pool.query("DELETE FROM notes WHERE id=$1", [req.params.id]);
+    res.status(200).json({ message: "Note Deleted" });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.listen(port, () => {
