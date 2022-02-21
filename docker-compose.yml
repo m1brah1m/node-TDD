@@ -1,0 +1,22 @@
+version: "2"
+
+services:
+  note-taking-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - note-taking-db:/var/lib/postgresql/data
+  note-taking-api:
+    build: .
+    image: note-taking-image
+    ports:
+      - "3000:3000"
+    depends_on:
+      - note-taking-db
+
+volumes:
+  note-taking-db:
