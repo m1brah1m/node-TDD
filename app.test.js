@@ -85,4 +85,36 @@ describe("Testing the note taking api", () => {
         );
       });
   });
+
+  test("PUT /notes/:id ➡ update a specific note", () => {
+    return request(app)
+      .put("/notes/1")
+      .send({ note_title: "Note 1", note_body: "Body" })
+      .expect(200)
+      .expect("Content-type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            message: "Note Updated",
+          })
+        );
+      });
+  });
+  test("PUT /notes/:id ➡ note not found", () => {
+    return request(app)
+      .put("/notes/100")
+      .send({ note_title: "Note 1", note_body: "Body" })
+      .expect(404)
+      .expect("Content-type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            message: "Not Found",
+          })
+        );
+      });
+  });
+
+  //   test("DELETE /notes/:id ➡ delete a specific note");
+  //   test("DELETE /notes/:id ➡ note not found");
 });
