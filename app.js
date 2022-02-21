@@ -55,7 +55,22 @@ app.get("/notes/:id", async (req, res, next) => {
 // Update a note by id
 app.put("/notes/:id", async (req, res, next) => {
   try {
-  } catch (error) {}
+    const note = await pool.query("SELECT * FROM notes WHERE id=$1", [
+      req.params.id,
+    ]);
+    if (!note.rows[0]) {
+      return res.status(404).json({ message: "Not Found" });
+    }
+
+    await pool.query(
+      "UPDATE notes SET note_body=$1,note_title=$2 WHERE id=$3;",
+      [req.body.note_body, req.body.note_title, req.params.id]
+    );
+
+    res.status(200).json({ message: "Note Updated" });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // Delete a note by id
