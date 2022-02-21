@@ -4,7 +4,8 @@
   "description": "api for a note-taking app",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "prod": "node app.js",
+    "dev": "nodemon app.js",
     "test": "jest --watchAll --verbose"
   },
   "author": "",
